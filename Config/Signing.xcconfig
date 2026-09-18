@@ -1,0 +1,2 @@
+// Shared configuration. Put your Apple Team ID in the ignored local file.
+#include? "Signing.local.xcconfig"

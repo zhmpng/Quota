@@ -1,62 +1,85 @@
-# Xcode
-#
-# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+# macOS
+.DS_Store
+._*
+.AppleDouble/
+.LSOverride
 
-## User settings
-xcuserdata/
-
-## Obj-C/Swift specific
-*.hmap
-
-## App packaging
-*.ipa
-*.dSYM.zip
-*.dSYM
-
-## Playgrounds
-timeline.xctimeline
-playground.xcworkspace
-
-# Swift Package Manager
-#
-# Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
-# Packages/
-# Package.pins
-# Package.resolved
-# *.xcodeproj
-#
-# Xcode automatically generates this directory with a .xcworkspacedata file and xcuserdata
-# hence it is not needed unless you have added a package configuration file to your project
-# .swiftpm
-
+# Swift / Xcode build products and local state
 .build/
+.build-local/
+.swiftpm/
+.xcode-build/
+build/
+Build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.hmap
+*.xcactivitylog
+*.xcresult/
+*.xcarchive/
+*.dSYM/
+*.dSYM.zip
+*.app/
+*.appex/
+*.o
+*.a
 
-# CocoaPods
-#
-# We recommend against adding the Pods directory to your .gitignore. However
-# you should judge for yourself, the pros and cons are mentioned at:
-# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
-#
-# Pods/
-#
-# Add this line if you want to avoid checking in source code from the Xcode workspace
-# *.xcworkspace
+# Distribution belongs in GitHub Releases, not in source history
+*.dmg
+*.pkg
+*.ipa
+*.zip
+dist/
+release/
+releases/
 
-# Carthage
-#
-# Add this line if you want to avoid checking in source code from Carthage dependencies.
-# Carthage/Checkouts
+# Local signing identity, certificates and provisioning profiles
+Config/Signing.local.xcconfig
+*.p12
+*.pfx
+*.pem
+*.key
+*.cer
+*.mobileprovision
+*.provisionprofile
 
-Carthage/Build/
+# Local account data, proxy settings and diagnostics
+.env
+.env.*
+!.env.example
+auth.json
+.credentials.json
+snapshot.json
+usage.json
+rateLimits.json
+proxy.conf
+identity.conf
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+Cookies
+Cookies-journal
+Cookies-wal
+Cookies-shm
+*.log
+*-windows.json
+work/
+tmp/
+.cache/
+__pycache__/
+*.py[cod]
 
-# fastlane
-#
-# It is recommended to not store the screenshots in the git repo.
-# Instead, use fastlane to re-generate the screenshots whenever they are needed.
-# For more information about the recommended setup visit:
-# https://docs.fastlane.tools/best-practices/source-control/#source-control
+# Full render matrix is reproducible; curated README images stay tracked
+/native-previews/
 
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots/**/*.png
-fastlane/test_output
+# Keep Package.resolved, shared Xcode schemes, Config/Xcode, brand assets,
+# docs/images and demo-only design references in version control.
+/design
+
+# Local maintenance helpers; Xcode builds without them
+/scripts/

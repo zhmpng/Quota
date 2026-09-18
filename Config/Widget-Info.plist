@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleIdentifier</key><string>local.quota.app.widgets</string>
+<key>CFBundleExecutable</key><string>QuotaWidgets</string>
+<key>CFBundleName</key><string>QuotaWidgets</string>
+<key>CFBundleDisplayName</key><string>Quota</string>
+<key>CFBundlePackageType</key><string>XPC!</string>
+<key>CFBundleShortVersionString</key><string>1.2.1</string>
+<key>CFBundleVersion</key><string>5</string>
+<key>LSMinimumSystemVersion</key><string>14.0</string>
+<key>QuotaAppGroup</key><string>group.local.quota.widgets</string>
+<key>QuotaEnableSystemWidgets</key><true/>
+<key>NSExtension</key><dict><key>NSExtensionPointIdentifier</key><string>com.apple.widgetkit-extension</string></dict>
+</dict></plist>

@@ -1,2 +1,14 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Keep executable scripts portable between checkouts
+*.sh text eol=lf
+*.py text eol=lf
+*.swift text eol=lf
+*.md text eol=lf
+*.xcconfig text eol=lf
+
+# Product artwork is binary; SVG remains diffable text
+*.png binary
+*.icns binary
+*.svg text eol=lf
