@@ -4,7 +4,7 @@ import WidgetKit
 import QuotaCore
 
 @MainActor final class AppModel:ObservableObject {
-    @Published var dashboard=DashboardSnapshot()
+    @Published var dashboard=DashboardSnapshot() {didSet {island.update(dashboard)}}
     @Published var refreshing:Set<Provider>=[]
     @Published var notice:String?
     @Published var selectedProvider:Provider = .openai
@@ -16,6 +16,7 @@ import QuotaCore
     @Published var claudeProfileID=UserDefaults.standard.string(forKey:"claudeDesktopProfile") ?? "auto"
     @Published var codexRoute=UserDefaults.standard.string(forKey:"codexRoute") ?? "auto"
     let codex=CodexConnection()
+    let island=DynamicIslandController()
     private var timer:Task<Void,Never>?
     private var started=false
     private var revisions:[Provider:Int]=[:]
@@ -26,6 +27,7 @@ import QuotaCore
     func start() {
         guard !started else{return};started=true
         dashboard=SnapshotStore.load(from:SnapshotStore.appDirectory())
+        island.start()
         // Older versions offered only the CLI button. Retry a failed, never-connected
         // CLI selection as Desktop when upgrading an ATLAS installation.
         if UserDefaults.standard.string(forKey:"claudeSource") == "local",
@@ -174,7 +176,7 @@ import QuotaCore
         }
     }
     func openBilling(_ provider:Provider) {NSWorkspace.shared.open(URL(string:provider == .claude ? "https://claude.ai/settings/billing" : "https://chatgpt.com/#settings/Account")!)}
-    func shutdown() {timer?.cancel();codex.stop();if let wakeObserver {NSWorkspace.shared.notificationCenter.removeObserver(wakeObserver)}}
+    func shutdown() {timer?.cancel();island.stop();codex.stop();if let wakeObserver {NSWorkspace.shared.notificationCenter.removeObserver(wakeObserver)}}
     private func persist() {
         let snapshot=dashboard
         // Keep disk access off the UI actor, and preserve write order between providers.

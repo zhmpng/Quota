@@ -83,3 +83,5 @@ __pycache__/
 
 # Local maintenance helpers; Xcode builds without them
 /scripts/
+/docs/demo
+/docs/design

@@ -9,16 +9,29 @@ import QuotaUI
 @main struct QuotaApplication:App {
     @StateObject private var model=AppModel()
     @NSApplicationDelegateAdaptor(QuotaDelegate.self) private var delegate
+    @Environment(\.openWindow) private var openWindow
     var body:some Scene {
-        WindowGroup("Quota",id:"main") {
+        // Keep one dashboard for both widget links and the menu bar action.
+        Window("Quota",id:"main") {
             DashboardView().environmentObject(model).frame(minWidth:880,minHeight:680)
-                .task {delegate.model=model;model.start()}
+                .task { [model, openWindow, delegate] in
+                    delegate.model=model
+                    model.island.onOpenProvider={ [weak model] provider in
+                        model?.selectedProvider=provider
+                        openWindow(id:"main")
+                        NSApp.activate(ignoringOtherApps:true)
+                    }
+                    model.start()
+                }
                 .onOpenURL {url in
                     guard url.scheme == "quota" else{return}
                     if let provider=Provider(rawValue:url.lastPathComponent) {model.selectedProvider=provider}
                     NSApp.activate(ignoringOtherApps:true)
                 }
-        }.defaultSize(width:1040,height:800)
+                .handlesExternalEvents(preferring:["quota://"],allowing:["quota://"])
+        }
+        .defaultSize(width:1040,height:800)
+        .handlesExternalEvents(matching:["quota://"])
         MenuBarExtra("Quota",systemImage:"gauge.with.dots.needle.50percent") {
             MenuContent().environmentObject(model)
         }.menuBarExtraStyle(.menu)
@@ -144,6 +157,7 @@ private struct DashboardView:View {
                 else {Text(snapshot.status(at:Date())).font(.system(size:11)).foregroundStyle(.secondary)}
             }
             if let message=snapshot.message {Text(message).font(.system(size:12)).foregroundStyle(.secondary).textSelection(.enabled)}
+            DynamicIslandSettings(provider:snapshot.provider,island:model.island)
             connectionButtons(snapshot.provider)
             if snapshot.provider == .claude,!model.claudeProfiles.isEmpty {
                 Picker("Профиль Claude Desktop",selection:Binding(get:{model.claudeProfileID},set:{model.selectClaudeProfile($0)})) {

@@ -35,6 +35,15 @@ import QuotaUI
                 to:directory.appendingPathComponent("readme-hero-\(dark ? "dark" : "light").png"),scale:1.5)
         }
 
+        let islandNow = ISO8601DateFormatter().date(from: "2026-09-19T15:24:00Z")!
+        let islandDemo = DemoData.make(now: islandNow)
+        for provider in Provider.allCases {
+            for expanded in [false, true] {
+                try save(IslandDocumentationScene(snapshot: islandDemo.snapshot(provider), now: islandNow, expanded: expanded),
+                         to: directory.appendingPathComponent("island-\(provider.rawValue)-\(expanded ? "expanded" : "collapsed").png"), scale: 1.5)
+            }
+        }
+
         // Pixel regression: identical RGB tints must not make the empty rail look full.
         var checks:[[String:Any]]=[]
         for (name,mode) in modes where mode != .fullColor {
@@ -65,6 +74,23 @@ import QuotaUI
         let renderer=ImageRenderer(content:view);renderer.scale=scale
         guard let image=renderer.cgImage,let data=NSBitmapImageRep(cgImage:image).representation(using:.png,properties:[:]) else{throw QuotaError.message("Не удалось отрисовать PNG.")}
         try data.write(to:url)
+    }
+}
+
+private struct IslandDocumentationScene: View {
+    let snapshot: ProviderSnapshot
+    let now: Date
+    let expanded: Bool
+    var body: some View {
+        ZStack(alignment: .top) {
+            LinearGradient(colors: [Color(hex: 0x6B7A63), Color(hex: 0xA2A38B), Color(hex: 0x526A5F)], startPoint: .topLeading, endPoint: .bottomTrailing)
+            QuotaIslandView(snapshot: snapshot, now: now, expanded: expanded, notchWidth: 184, notchHeight: 34)
+                .frame(width: expanded ? 420 : 296, height: expanded ? 246 : 34)
+        }.frame(width: 660, height: expanded ? 296 : 118)
+            .overlay(alignment: .bottomLeading) {
+                Text(expanded ? "НАВЕДЕНИЕ · ПОДРОБНОСТИ ЛИМИТА" : "СВЁРНУТО · ИКОНКА И ОСТАТОК")
+                    .font(.system(size: 10, weight: .medium)).tracking(1.2).foregroundStyle(.white.opacity(0.85)).padding(18)
+            }
     }
 }
 
